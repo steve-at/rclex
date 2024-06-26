@@ -119,7 +119,7 @@ defmodule Rclex do
       when is_atom(message_type) and is_binary(topic_name) and is_binary(name) and is_list(opts) do
     namespace = Keyword.get(opts, :namespace, "/")
     Rclex.Node.stop_publisher(message_type, topic_name, name, namespace)
-  endst
+  end
 
   @doc """
   Publish message.
