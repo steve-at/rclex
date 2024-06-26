@@ -25,13 +25,13 @@ defmodule Rclex do
       {:error, :already_started}
   """
   @spec start_node(name :: String.t(), opts :: [namespace: String.t()]) ::
-          :ok | {:error, :already_started} | {:error, term()}
+          {:ok, term()} | {:error, :already_started} | {:error, term()}
   def start_node(name, opts \\ []) when is_binary(name) and is_list(opts) do
     context = Rclex.Context.get()
     namespace = Keyword.get(opts, :namespace, "/")
 
     case Rclex.NodesSupervisor.start_child(context, name, namespace) do
-      {:ok, _pid} -> :ok
+      {:ok, pid} -> {:ok, pid}
       {:error, {:already_started, _pid}} -> {:error, :already_started}
       {:error, reason} -> {:error, reason}
     end
@@ -119,7 +119,7 @@ defmodule Rclex do
       when is_atom(message_type) and is_binary(topic_name) and is_binary(name) and is_list(opts) do
     namespace = Keyword.get(opts, :namespace, "/")
     Rclex.Node.stop_publisher(message_type, topic_name, name, namespace)
-  end
+  endst
 
   @doc """
   Publish message.
@@ -175,7 +175,7 @@ defmodule Rclex do
           node_name :: String.t(),
           opts :: [namespace: String.t(), qos: Rclex.QoS.t()]
         ) ::
-          :ok | {:error, :already_started} | {:error, term()}
+          {:ok, term()} | {:error, :already_started} | {:error, term()}
   def start_subscription(callback, message_type, topic_name, node_name, opts \\ [])
       when is_function(callback) and is_atom(message_type) and is_binary(topic_name) and
              is_binary(node_name) and is_list(opts) do
@@ -190,7 +190,7 @@ defmodule Rclex do
            namespace,
            qos
          ) do
-      {:ok, _pid} -> :ok
+      {:ok, pid} -> {:ok, pid}
       {:error, {:already_started, _pid}} -> {:error, :already_started}
       {:error, reason} -> {:error, reason}
     end
